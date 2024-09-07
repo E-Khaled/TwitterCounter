@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RegularPrimaryText_Small">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_text_primary</item>
+        <item name="android:textSize">@dimen/_8ssp</item>
+    </style>
+    <style name="BoldPrimaryText_Medium">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_text_primary</item>
+        <item name="android:textSize">@dimen/_12ssp</item>
+    </style>
+    <style name="BoldPrimaryText_Large">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_text_primary</item>
+        <item name="android:textSize">@dimen/_18ssp</item>
+    </style>
+</resources>

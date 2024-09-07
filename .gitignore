@@ -1,0 +1,69 @@
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration files
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries/
+/.idea/caches/
+/.idea/modules.xml
+/.idea/*.iml
+/.idea/modules/
+*.iml
+*.hprof
+
+# Android Studio
+.idea/
+*.iws
+*.iml
+*.ipr
+/.idea/**/workspace.xml
+/.idea/**/tasks.xml
+/.idea/**/usage.statistics.xml
+/.idea/**/dictionaries
+/.idea/**/gradle.xml
+/.idea/**/libraries
+
+# Keystore files
+*.jks
+*.keystore
+
+# Proguard
+proguard/
+*.pro
+
+# Log files
+*.log
+
+# Android specific files
+*.apk
+*.ap_
+*.dex
+*.class
+*.so
+*.obj
+*.lock
+*.db
+*.jar
+*.war
+*.ear
+*.classpath
+*.project
+*.settings/
+
+# IntelliJ
+out/
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+
+# OS generated files
+*.swp
+*.swo
+*.swn
+*.s~
+*~
