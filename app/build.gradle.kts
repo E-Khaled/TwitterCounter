@@ -15,7 +15,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        buildConfigField("String", "BASE_URL",  "\"https://api.twitter.com/1.1/\"")
+        buildConfigField("String", "BASE_URL",  "\"https://api.twitter.com\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -68,8 +68,9 @@ dependencies {
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-//According to X documentation https://developer.x.com/en/docs/x-api/tools-and-libraries/sdks/overview
-    implementation(libs.twitter)
+    implementation(libs.scribejava)
+    implementation(libs.okHttp)
+
 
 //     implementation "com.twitter:twitter-api-java-sdk:1.1.4"
 }

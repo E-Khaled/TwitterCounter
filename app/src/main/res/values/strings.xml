@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Twitter Counter</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="char_typed">Characters Typed</string>
+    <string name="char_remaining">Characters Remaining</string>
+    <string name="start_typing_hint">Start typing! You can enter up to 280 characters</string>
+    <string name="copy_text">Copy Text</string>
+    <string name="clear_text">Clear Text</string>
+    <string name="msg_no_network">No Network</string>
+    <string name="msg_can_not_get_data">No data</string>
+    <string name="msg_bad_request">Bad Request</string>
+    <string name="please_wait">Please Wait</string>
+</resources>
