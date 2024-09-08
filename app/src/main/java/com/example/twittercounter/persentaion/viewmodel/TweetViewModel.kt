@@ -38,7 +38,6 @@ class TweetViewModel @Inject constructor(
 
     private val _disableBtn = MutableSharedFlow<Boolean>()
     val disableBtn = _disableBtn.asSharedFlow()
-
     private val _toastText = MutableSharedFlow<String>()
     val toastText = _toastText.asSharedFlow()
 
@@ -70,7 +69,6 @@ class TweetViewModel @Inject constructor(
         }
     }
 
-    //TODO remove hardCoded Strings
     fun onClearText(text: String) {
         viewModelScope.launch {
             if (text.isEmpty() || text.isBlank())
@@ -118,6 +116,7 @@ class TweetViewModel @Inject constructor(
 
             _characterCount.emit(characterCount)
             isPostEnabled(characterCount)
+
         }
     }
 }

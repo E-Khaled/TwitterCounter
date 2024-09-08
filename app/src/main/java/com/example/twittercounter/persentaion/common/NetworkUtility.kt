@@ -42,7 +42,7 @@ class NetworkUtility @Inject constructor(
             } else {
                 emit(ApiResult.Loading())
                 val response = apiToBeCalled.invoke()
-                Log.e("NetworkUtility", "response"+response)
+                Log.e("NetworkUtility", "response" + response)
 
                 emit(
                     ApiResult.Success(response)
@@ -80,44 +80,19 @@ class NetworkUtility @Inject constructor(
     }
 
     private fun getErrorMessage(responseCode: Int, responseBody: ResponseBody?): String {
-        val resources =  applicationContext.getLocalizedResources(Constants.LANG_EN)
+        val resources = applicationContext.getLocalizedResources(Constants.LANG_EN)
 
-        return getBackendErrorMessage(responseBody)?:resources.getString(R.string.msg_bad_request)
-    //        when (responseCode) {
-
-//            NetworkError.BAD_REQUEST.code -> return getBackendErrorMessage(responseBody)
-//                ?: resources.getString(R.string.msg_bad_request)
-
-//            NetworkError.UNAUTHORIZED.code -> return resources.getString(R.string.msg_unauthorized_user)
-//
-//            NetworkError.FORBIDDEN.code -> return resources.getString(R.string.msg_forbidden_user)
-//
-//            NetworkError.NOT_FOUND.code -> return resources.getString(R.string.msg_no_data)
-//
-//            NetworkError.TIMEOUT.code -> return resources.getString(R.string.msg_timeout)
-//
-//            NetworkError.TOO_MANY_REQUESTS.code -> return getBackendErrorMessage(responseBody)
-//                ?: resources.getString(R.string.msg_too_many_requests)
-//
-//            NetworkError.CONFLICT.code -> return resources.getString(R.string.msg_conflict)
-//
-//            NetworkError.INTERNAL_SERVER_ERROR.code -> return resources.getString(
-//                R.string.msg_internal_service_error
-//            )
-//
-//            else -> return resources.getString(R.string.msg_can_not_get_data)
-
-        }
+        return getBackendErrorMessage(responseBody) ?: resources.getString(R.string.msg_bad_request)
     }
-    private fun getBackendErrorMessage(responseBody: ResponseBody?): String? {
-        val gson = Gson()
-        val type = object : TypeToken<ApiError>() {}.type
-        val errorResponse: ApiError? = gson.fromJson(responseBody?.charStream(), type)
+}
 
-        return errorResponse?.detail
-    }
+private fun getBackendErrorMessage(responseBody: ResponseBody?): String? {
+    val gson = Gson()
+    val type = object : TypeToken<ApiError>() {}.type
+    val errorResponse: ApiError? = gson.fromJson(responseBody?.charStream(), type)
 
-
+    return errorResponse?.detail
+}
 
 
 enum class NetworkError(val code: Int) {
