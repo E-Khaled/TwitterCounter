@@ -8,5 +8,6 @@
     <color name="color_red">#DC0125</color>
     <color name="color_green">#00A970</color>
     <color name="color_blue">#03A9F4</color>
+    <color name="sperator_gray">#F6F6F6</color>
 
 </resources>
