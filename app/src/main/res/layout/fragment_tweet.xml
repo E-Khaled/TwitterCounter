@@ -68,7 +68,7 @@
                     style="@style/BoldPrimaryText_Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="/280" />
+                    />
             </LinearLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </com.google.android.material.card.MaterialCardView>
@@ -116,7 +116,7 @@
                     style="@style/BoldPrimaryText_Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="280" />
+                    />
             </LinearLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </com.google.android.material.card.MaterialCardView>

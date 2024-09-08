@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -26,14 +27,10 @@ class TweetFragment : Fragment() {
     private val tweetViewModel: TweetViewModel by viewModels()
     private val binding by lazy { FragmentTweetBinding.inflate(layoutInflater) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         setup()
         action()
@@ -43,8 +40,9 @@ class TweetFragment : Fragment() {
 
     private fun setup() {
         binding.tvCharRemaining.text = Constants.MAX_TWEET_LENGTH.toString()
-        binding.tvTotalCharAllowed.text = "/${Constants.MAX_TWEET_LENGTH.toString()}"
+        binding.tvTotalCharAllowed.text = "/${Constants.MAX_TWEET_LENGTH}"
         binding.tvCurrentCharCount.text = "0"
+        binding.tvCharRemaining.text = Constants.MAX_TWEET_LENGTH.toString()
         disablePostBtn()
     }
 
@@ -60,6 +58,9 @@ class TweetFragment : Fragment() {
         }
         binding.btnPostTweet.setOnClickListener {
             tweetViewModel.postTweet(getTweetTextFromUI())
+        }
+        binding.toolbar.ivBack.setOnClickListener {
+            activity?.finishAffinity();
         }
     }
 

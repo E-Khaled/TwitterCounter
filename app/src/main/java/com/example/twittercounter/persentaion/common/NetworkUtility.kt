@@ -80,7 +80,7 @@ class NetworkUtility @Inject constructor(
     }
 
     private fun getErrorMessage(responseCode: Int, responseBody: ResponseBody?): String {
-        val resources = applicationContext.getLocalizedResources(Constants.LANG_EN)
+        val resources = applicationContext.getLocalizedResources(LANG_EN)
 
         return getBackendErrorMessage(responseBody) ?: resources.getString(R.string.msg_bad_request)
     }
