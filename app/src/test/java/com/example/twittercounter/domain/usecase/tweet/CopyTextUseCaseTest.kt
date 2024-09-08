@@ -1,25 +1,39 @@
-package com.example.twittercounter.domain.usecase.tweet
-
-import org.junit.Assert.assertEquals
+import com.example.twittercounter.domain.repository.ClipboardHandler
+import com.example.twittercounter.domain.usecase.tweet.CopyTextUseCase
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito.*
 
 class CopyTextUseCaseTest {
 
+    private lateinit var clipboardHandler: ClipboardHandler
     private lateinit var copyTextUseCase: CopyTextUseCase
 
     @Before
-    fun setup() {
-        copyTextUseCase = CopyTextUseCase()
+    fun setUp() {
+        clipboardHandler = mock(ClipboardHandler::class.java)
+        copyTextUseCase = CopyTextUseCase(clipboardHandler)
     }
 
     @Test
-    fun `test copy text`() {
-        val inputText = "This text should be copied."
+    fun `execute should return true when text is copied successfully`() {
+        `when`(clipboardHandler.copyText(anyString(), anyString())).thenReturn(true)
 
-        val result = copyTextUseCase.execute(inputText)
+        val result = copyTextUseCase.execute("Some text")
 
-        assertEquals(inputText, result)
+        assertTrue(result)
+        verify(clipboardHandler).copyText("tweetText", "Some text")
+    }
+
+    @Test
+    fun `execute should return false when text is not copied successfully`() {
+        `when`(clipboardHandler.copyText(anyString(), anyString())).thenReturn(false)
+
+        val result = copyTextUseCase.execute("Some text")
+
+        assertFalse(result)
+        verify(clipboardHandler).copyText("tweetText", "Some text")
     }
 }
-

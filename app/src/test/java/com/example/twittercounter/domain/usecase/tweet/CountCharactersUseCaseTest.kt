@@ -1,6 +1,5 @@
-package com.example.twittercounter.domain.usecase.tweet
-
-import org.junit.Assert.*
+import com.example.twittercounter.domain.usecase.tweet.CountCharactersUseCase
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -9,38 +8,31 @@ class CountCharactersUseCaseTest {
     private lateinit var countCharactersUseCase: CountCharactersUseCase
 
     @Before
-    fun setup() {
+    fun setUp() {
         countCharactersUseCase = CountCharactersUseCase()
     }
 
     @Test
-    fun `test character count within limit`() {
-        val input = "Hello, Reviewer from Halan!"
-
-        val result = countCharactersUseCase.execute(input)
-
-        // Assert
-        assertEquals(27, result.typed)  // "Hello, Reviewer from Halan!" is 27 characters long
-        assertEquals(267, result.remaining) // 280 - 13 = 267
+    fun `getTextLength should return correct length for normal text`() {
+        val result = countCharactersUseCase.getTextLength("Hello, Reviewer from Halan!")
+        assertEquals(27, result)  // "Hello, Reviewer from Halan!" is 27 characters long
     }
 
     @Test
-    fun `test character count at exact limit`() {
-        val input = "a".repeat(280)
-
-        val result = countCharactersUseCase.execute(input)
-
-        assertEquals(280, result.typed)
-        assertEquals(0, result.remaining)
+    fun `getTextLength should count emojis as 2 characters`() {
+        val result = countCharactersUseCase.getTextLength("Hello 😊")
+        assertEquals(8, result)  // "Hello 😊" counts the emoji as 2 characters
     }
 
     @Test
-    fun `test character count exceeding limit`() {
-        val input = "a".repeat(300)
+    fun `getTextLength should count URLs as 23 characters`() {
+        val result = countCharactersUseCase.getTextLength("Check this out: https://example.com")
+        assertEquals(39, result)  // "Check this out: " (17) + URL (23) - (3)
+    }
 
-        val result = countCharactersUseCase.execute(input)
-
-        assertEquals(300, result.typed)
-        assertEquals(-20, result.remaining)
+    @Test
+    fun `getTextLength should count special languages as 2 characters each`() {
+        val result = countCharactersUseCase.getTextLength("测试")
+        assertEquals(4, result)  // "测试" is 2 Chinese characters, each counted as 2
     }
 }

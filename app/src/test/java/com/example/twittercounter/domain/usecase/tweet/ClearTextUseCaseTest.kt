@@ -1,22 +1,14 @@
-package com.example.twittercounter.domain.usecase.tweet
-
-import org.junit.Assert.*
-import org.junit.Before
+import com.example.twittercounter.domain.usecase.tweet.ClearTextUseCase
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class ClearTextUseCaseTest{
+class ClearTextUseCaseTest {
 
-    private lateinit var clearTextUseCase: ClearTextUseCase
-
-    @Before
-    fun setup() {
-        clearTextUseCase = ClearTextUseCase()
-    }
+    private val clearTextUseCase = ClearTextUseCase()
 
     @Test
-    fun `test clear text`() {
+    fun `execute should return an empty string`() {
         val result = clearTextUseCase.execute()
-
         assertEquals("", result)
     }
 }

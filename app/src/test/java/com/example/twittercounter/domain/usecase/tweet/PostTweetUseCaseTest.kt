@@ -1,57 +1,68 @@
-package com.example.twittercounter.domain.usecase.tweet
-
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
+import com.example.twittercounter.data.remote.api.ApiResult
+import com.example.twittercounter.data.remote.model.ApiError
+import com.example.twittercounter.data.remote.model.CreateTweetResp
+import com.example.twittercounter.data.remote.model.TweetData
+import com.example.twittercounter.domain.model.CreateTweetRequest
+import com.example.twittercounter.domain.repository.TweetRepository
+import com.example.twittercounter.domain.usecase.tweet.PostTweetUseCase
+import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class PostTweetUseCaseTest {
 
-    private lateinit var repository: TwitterRepository
+    private lateinit var tweetRepository: TweetRepository
     private lateinit var postTweetUseCase: PostTweetUseCase
 
     @Before
-    fun setup() {
-        repository = mock(TwitterRepository::class.java)
-        postTweetUseCase = PostTweetUseCase(repository)
+    fun setUp() {
+        tweetRepository = mock(TweetRepository::class.java)
+        postTweetUseCase = PostTweetUseCase(tweetRepository)
     }
 
     @Test
-    fun `test successful tweet post`(): Unit = runBlocking {
-        val tweetText = "This is a test tweet."
-        val successMessage = "Tweet posted successfully"
-        `when`(repository.postTweet(tweetText)).thenReturn(Result.success(successMessage))
+    fun `execute should emit success result when tweet is posted successfully`() = runBlocking {
+        val response = CreateTweetResp(
+            data = TweetData(
+                text = "Hello World",
+                edit_history_tweet_ids = listOf("12345"),
+                id = "67890"
+            )
+        )
 
-        val result = postTweetUseCase.execute(tweetText)
+        `when`(tweetRepository.postTweet(any())).thenReturn(flow {
+            emit(ApiResult.Success(response))
+        })
 
-        assertTrue(result.isSuccess)
-        assertEquals(successMessage, result.getOrNull())
-        verify(repository).postTweet(tweetText)  // Ensure repository method is called
+        val flow = postTweetUseCase.execute("Hello World")
+
+        flow.collect { result ->
+            assert(result is ApiResult.Success)
+            assertEquals(response, (result as ApiResult.Success).data)
+        }
+        verify(tweetRepository).postTweet(CreateTweetRequest("Hello World"))
     }
 
     @Test
-    fun `test tweet exceeding character limit`(): Unit = runBlocking {
-        val tweetText = "a".repeat(300)
+    fun `execute should emit error result when posting tweet fails`() = runBlocking {
+        val apiError = ApiError(500, detail = "Network error")
 
-        val result = postTweetUseCase.execute(tweetText)
+        `when`(tweetRepository.postTweet(any())).thenReturn(flow {
+            emit(ApiResult.Error(apiError))
+        })
 
-        assertTrue(result.isFailure)
-        assertEquals("Tweet exceeds 280 characters", result.exceptionOrNull()?.message)
-        verify(repository, never()).postTweet(anyString())  // Ensure repository method is NOT called
-    }
+        val flow = postTweetUseCase.execute("Hello World")
 
-    @Test
-    fun `test repository failure when posting tweet`(): Unit = runBlocking {
-        val tweetText = "This is a test tweet."
-        val exception = Exception("Network error")
-        `when`(repository.postTweet(tweetText)).thenReturn(Result.failure(exception))
-
-        val result = postTweetUseCase.execute(tweetText)
-
-        assertTrue(result.isFailure)
-        assertEquals("Network error", result.exceptionOrNull()?.message)
-        verify(repository).postTweet(tweetText)
+        flow.collect { result ->
+            assert(result is ApiResult.Error)
+            assertEquals("Network error", (result as ApiResult.Error).error.detail)
+        }
+        verify(tweetRepository).postTweet(CreateTweetRequest("Hello World"))
     }
 }
