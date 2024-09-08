@@ -175,7 +175,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_rounded_all_edges"
         android:backgroundTint="@color/color_blue"
-        android:text="@string/copy_text"
+        android:text="@string/post_tweet"
         android:layout_marginVertical="@dimen/_20sdp"
         android:textColor="@color/white"
         android:textSize="@dimen/_8ssp"

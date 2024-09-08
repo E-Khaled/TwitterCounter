@@ -3,6 +3,7 @@ package com.example.twittercounter.persentaion.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twittercounter.data.remote.api.ApiResult
+import com.example.twittercounter.domain.provider.StringProvider
 import com.example.twittercounter.domain.usecase.tweet.ClearTextUseCase
 import com.example.twittercounter.domain.usecase.tweet.CopyTextUseCase
 import com.example.twittercounter.domain.usecase.tweet.CountCharactersUseCase
@@ -19,7 +20,8 @@ class TweetViewModel @Inject constructor(
     private val countCharactersUseCase: CountCharactersUseCase,
     private val postTweetUseCase: PostTweetUseCase,
     private val clearTextUseCase: ClearTextUseCase,
-    private val copyTextUseCase: CopyTextUseCase
+    private val copyTextUseCase: CopyTextUseCase,
+    private val stringProvider: StringProvider
 ) : ViewModel() {
 
     private val _characterCount = MutableSharedFlow<Int>()
@@ -28,8 +30,14 @@ class TweetViewModel @Inject constructor(
     private val _remainingCharacterCount = MutableSharedFlow<Int>()
     val remainingCharacterCount = _remainingCharacterCount.asSharedFlow()
 
-    private val _isValidCharacterCount = MutableSharedFlow<Boolean>()
-    val isValidCharacterCount = _isValidCharacterCount.asSharedFlow()
+    private val _isPostEnabled = MutableSharedFlow<Boolean>()
+    val isPostEnabled = _isPostEnabled.asSharedFlow()
+
+    private val _enableBtn = MutableSharedFlow<Boolean>()
+    val enableBtn = _enableBtn.asSharedFlow()
+
+    private val _disableBtn = MutableSharedFlow<Boolean>()
+    val disableBtn = _disableBtn.asSharedFlow()
 
     private val _toastText = MutableSharedFlow<String>()
     val toastText = _toastText.asSharedFlow()
@@ -55,45 +63,61 @@ class TweetViewModel @Inject constructor(
 
                     is ApiResult.Success -> {
                         _showProgress.emit(false)
-                        _toastText.emit("Congrats")
+                        _toastText.emit(stringProvider.getTweetPostedSuccessfully())
                     }
                 }
             }
         }
     }
-//TODO exceeded max bool flow
 
-    fun onClearText() {
+    //TODO remove hardCoded Strings
+    fun onClearText(text: String) {
         viewModelScope.launch {
-            _clearText.emit(clearTextUseCase.execute())
+            if (text.isEmpty() || text.isBlank())
+                _toastText.emit(stringProvider.getNoTextToClear())
+            else
+                _clearText.emit(clearTextUseCase.execute())
         }
     }
 
     fun copyText(text: String) {
         viewModelScope.launch {
-            val copyTextResult = copyTextUseCase.execute(text)
-            if (copyTextResult) {
-                _toastText.emit("Text copied to clipboard")
+            if (text.isEmpty() || text.isBlank()) {
+                _toastText.emit(stringProvider.getNoTextToCopy())
+                return@launch
             } else {
-                _toastText.emit("Failed to copy text to clipboard")
+                val copyTextResult = copyTextUseCase.execute(text)
+                if (!copyTextResult) {
+                    _toastText.emit(stringProvider.getFailedToCopyTextToClipboard())
+                }
             }
 
+        }
+    }
+
+    fun isPostEnabled(characterCount: Int) {
+        viewModelScope.launch {
+            if (characterCount > 0 && characterCount <= MAX_TWEET_LENGTH) {
+                _enableBtn.emit(true)
+            } else
+                _disableBtn.emit(true)
         }
     }
 
     fun onTextChange(text: String) {
         viewModelScope.launch {
             val characterCount = countCharactersUseCase.getTextLength(text)
+
             //TODO maybe seperate this in a function calcAndEmitRemainingCharacterCount()
             val remainingCharacterCount = MAX_TWEET_LENGTH - characterCount
             if (remainingCharacterCount >= 0) {
                 _remainingCharacterCount.emit(remainingCharacterCount)
-            }
-            else {
+            } else {
                 _remainingCharacterCount.emit(0)
             }
 
             _characterCount.emit(characterCount)
+            isPostEnabled(characterCount)
         }
     }
 }

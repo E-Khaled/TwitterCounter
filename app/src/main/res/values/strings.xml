@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Twitter Counter</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="char_typed">Characters Typed</string>
     <string name="char_remaining">Characters Remaining</string>
     <string name="start_typing_hint">Start typing! You can enter up to 280 characters</string>
@@ -11,4 +9,11 @@
     <string name="msg_can_not_get_data">No data</string>
     <string name="msg_bad_request">Bad Request</string>
     <string name="please_wait">Please Wait</string>
+    <string name="post_tweet">Post Tweet</string>
+    <string name="no_text_to_clear">No text to clear</string>
+    <string name="no_text_to_copy">No text to copy</string>
+    <string name="text_copied_to_clipboard">Text copied to clipboard</string>
+    <string name="failed_to_copy_text_to_clipboard">Failed to copy text to clipboard</string>
+    <string name="tweet_posted_successfully">Your tweet has been posted successfully</string>
+
 </resources>

@@ -2,10 +2,12 @@ package com.example.twittercounter.data.di
 
 import android.content.Context
 import com.example.twittercounter.BuildConfig
+import com.example.twittercounter.data.provider.DefaultStringProvider
 import com.example.twittercounter.data.remote.api.OAuth1Interceptor
 import com.example.twittercounter.data.remote.api.TweetApiService
 import com.example.twittercounter.data.repository.ClipboardHandlerImpl
 import com.example.twittercounter.data.repository.TweetRepositoryImpl
+import com.example.twittercounter.domain.provider.StringProvider
 import com.example.twittercounter.domain.repository.ClipboardHandler
 import com.example.twittercounter.domain.repository.TweetRepository
 import com.example.twittercounter.domain.usecase.tweet.ClearTextUseCase
@@ -115,6 +117,9 @@ object DataModule {
     fun provideNetWorkUtility(@ApplicationContext context: Context): NetworkUtility {
         return NetworkUtility(context)
     }
-
+    @Provides
+    fun provideStringProvider(@ApplicationContext context: Context): StringProvider {
+        return DefaultStringProvider(context)
+    }
 
 }

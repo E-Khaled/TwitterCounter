@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.twittercounter.R
 import com.example.twittercounter.data.remote.api.ApiResult
 import com.example.twittercounter.databinding.FragmentTweetBinding
 import com.example.twittercounter.persentaion.common.Constants
@@ -43,6 +45,7 @@ class TweetFragment : Fragment() {
         binding.tvCharRemaining.text = Constants.MAX_TWEET_LENGTH.toString()
         binding.tvTotalCharAllowed.text = "/${Constants.MAX_TWEET_LENGTH.toString()}"
         binding.tvCurrentCharCount.text = "0"
+        disablePostBtn()
     }
 
     private fun action() {
@@ -50,7 +53,7 @@ class TweetFragment : Fragment() {
             tweetViewModel.copyText(getTweetTextFromUI())
         }
         binding.btnClearText.setOnClickListener {
-            tweetViewModel.onClearText()
+            tweetViewModel.onClearText(binding.edtTweet.text.toString())
         }
         binding.edtTweet.addTextChangedListener {
             tweetViewModel.onTextChange(it.toString())
@@ -79,8 +82,19 @@ class TweetFragment : Fragment() {
                 }
             }
             launch {
-                tweetViewModel.isValidCharacterCount.collect {
-                    binding.btnPostTweet.isEnabled = it
+                tweetViewModel.enableBtn.collect {
+                    binding.btnPostTweet.isEnabled = true
+                    binding.btnPostTweet.setBackgroundTintList(
+                        ContextCompat.getColorStateList(requireContext(), R.color.color_blue)
+                    )
+                    binding.btnPostTweet.setTextColor(
+                        ContextCompat.getColor(requireContext(), R.color.white)
+                    )
+                }
+            }
+            launch {
+                tweetViewModel.disableBtn.collect {
+                    disablePostBtn()
                 }
             }
             launch {
@@ -100,6 +114,16 @@ class TweetFragment : Fragment() {
             }
 
         }
+    }
+
+    private fun disablePostBtn() {
+        binding.btnPostTweet.isEnabled = false
+        binding.btnPostTweet.setBackgroundTintList(
+            ContextCompat.getColorStateList(requireContext(), R.color.color_gray)
+        )
+        binding.btnPostTweet.setTextColor(
+            ContextCompat.getColor(requireContext(), R.color.color_text_secondry)
+        )
     }
 
     private fun getTweetTextFromUI(): String {
