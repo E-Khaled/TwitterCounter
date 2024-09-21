@@ -18,7 +18,7 @@ import javax.inject.Inject
 class NetworkUtility @Inject constructor(
     private val applicationContext: Context,
 ) {
-    fun isOnline(): Boolean {
+    private fun isOnline(): Boolean {
 
         val connectivityManager: ConnectivityManager =
             applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -42,8 +42,6 @@ class NetworkUtility @Inject constructor(
             } else {
                 emit(ApiResult.Loading())
                 val response = apiToBeCalled.invoke()
-                Log.e("NetworkUtility", "response" + response)
-
                 emit(
                     ApiResult.Success(response)
                 )
@@ -61,8 +59,11 @@ class NetworkUtility @Inject constructor(
             return when (ex.code()) {
                 //TODO Handle unAuthorized scenario
                 NetworkError.UNAUTHORIZED.code -> {
-                    Log.e("NetworkUtility", "UNAUTHORIZED:")
-                    null
+                    ApiError(
+                        ex.code(),
+                        applicationContext.getLocalizedResources(LANG_EN)
+                            .getString(R.string.unAuthorized_msg)
+                    )
                 }
 
                 else -> {

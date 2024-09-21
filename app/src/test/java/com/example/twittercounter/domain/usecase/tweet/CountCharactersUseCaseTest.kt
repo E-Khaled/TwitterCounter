@@ -14,8 +14,8 @@ class CountCharactersUseCaseTest {
 
     @Test
     fun `getTextLength should return correct length for normal text`() {
-        val result = countCharactersUseCase.getTextLength("Hello, Reviewer from Halan!")
-        assertEquals(27, result)  // "Hello, Reviewer from Halan!" is 27 characters long
+        val result = countCharactersUseCase.getTextLength("Hello!")
+        assertEquals(6, result) //expected 6 characters
     }
 
     @Test

@@ -16,5 +16,8 @@
     <string name="failed_to_copy_text_to_clipboard">Failed to copy text to clipboard</string>
     <string name="tweet_posted_successfully">Your tweet has been posted successfully</string>
     <string name="twitter_character_count">Twitter Character Count</string>
+    <string name="num_zero">0</string>
+    <string name="symbol_slash">/%1$s</string>
+    <string name="unAuthorized_msg">UnAuthorized, please use your credentials</string>
 
 </resources>
